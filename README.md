@@ -1,2 +1,2 @@
 # OutStem2024
-My OutStem Summer 2024 Coding Challenge Submission
+This is my submission for: https://github.com/AES-Outreach/Summer-2024-Coop-Interviews
