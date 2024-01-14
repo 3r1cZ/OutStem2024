@@ -4,6 +4,7 @@ import PieChart from "../components/PieChart";
 import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import BarChart from "../components/BarChart";
+import LineChart from "../components/LineChart";
 
 interface Props {
   reviewData: any;
@@ -100,6 +101,47 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     return pricingData[type][size];
   };
 
+  const monthsInNum = [
+    "01",
+    "02",
+    "03",
+    "04",
+    "05",
+    "06",
+    "07",
+    "08",
+    "09",
+    "10",
+    "11",
+    "12",
+  ];
+  const earningData = (dataName: string, colors: string[]) => {
+    return {
+      labels: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ],
+      datasets: [
+        {
+          label: dataName,
+          data: monthsInNum.map((month) => getEarningsForMonth(month)),
+          backgroundColor: colors,
+          borderColor: "rgb(75, 192, 192)",
+        },
+      ],
+    };
+  };
+
   return (
     <AnimationFadeIn>
       {sentimentTags !== undefined && stores !== undefined && (
@@ -134,6 +176,13 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
           </div>
           <div>
             <h2>Total Money Earned in 2023: ${getEarningsForYear()}</h2>
+          </div>
+          <div>
+            <LineChart
+              chartTitle="Monthly Earnings"
+              chartData={earningData("Earnings", ["white"])}
+              chartText="Earnings per Month ($)"
+            ></LineChart>
           </div>
         </div>
       )}
