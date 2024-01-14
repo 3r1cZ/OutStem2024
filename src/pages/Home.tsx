@@ -45,6 +45,27 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     return count;
   };
 
+  const data = (
+    tags: string[],
+    dataName: string,
+    dataset: any,
+    type: string,
+    colors: string[]
+  ) => {
+    return {
+      labels: tags,
+      datasets: [
+        {
+          label: dataName,
+          data: tags.map((tag) => getCount(dataset, type, tag)),
+          backgroundColor: colors,
+          borderColor: "white",
+          borderWidth: 2,
+        },
+      ],
+    };
+  };
+
   return (
     <AnimationFadeIn>
       {sentimentTags !== undefined && stores !== undefined && (
@@ -55,49 +76,25 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
           <div>
             <PieChart
               chartTitle="Customer Reviews"
-              chartData={{
-                labels: sentimentTags,
-                datasets: [
-                  {
-                    label: "Users",
-                    data: sentimentTags.map((tag) =>
-                      getCount(reviewData, "sentiment", tag)
-                    ),
-                    backgroundColor: [
-                      "rgb(255, 99, 132)",
-                      "rgb(54, 162, 235)",
-                      "rgb(255, 205, 86)",
-                      "rgb(244,242,107)",
-                    ],
-                    borderColor: "white",
-                    borderWidth: 2,
-                  },
-                ],
-              }}
+              chartData={data(sentimentTags, "Users", reviewData, "sentiment", [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+                "rgb(244,242,107)",
+              ])}
               chartText="Sentiments of Customer Reviews"
             />
           </div>
           <div>
             <BarChart
               chartTitle="Orders Placed"
-              chartData={{
-                labels: stores,
-                datasets: [
-                  {
-                    label: "Orders",
-                    data: stores.map((store) =>
-                      getCount(orderData, "store", store)
-                    ),
-                    backgroundColor: [
-                      "rgb(255, 99, 132)",
-                      "rgb(54, 162, 235)",
-                      "rgb(255, 205, 86)",
-                      "rgb(244,242,107)",
-                      "rgb(107,244,140)",
-                    ],
-                  },
-                ],
-              }}
+              chartData={data(stores, "Orders", orderData, "store", [
+                "rgb(255, 99, 132)",
+                "rgb(54, 162, 235)",
+                "rgb(255, 205, 86)",
+                "rgb(244,242,107)",
+                "rgb(107,244,140)",
+              ])}
               chartText="Orders Placed at Each Location"
             ></BarChart>
           </div>
