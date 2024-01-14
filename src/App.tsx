@@ -5,18 +5,44 @@ import Home from "./pages/Home";
 import useFetch from "./hooks/useFetch";
 
 function App() {
-  const { data: reviewData, isFetching } = useFetch("/data/review_data.json");
-  let reviewDataString, reviewDataParsed;
-  if (!isFetching) {
-    reviewDataString = JSON.stringify(reviewData);
-    reviewDataParsed = JSON.parse(reviewDataString);
+  const { data: reviewData, isFetching: isFetchingReviews } = useFetch(
+    "/data/review_data.json"
+  );
+  const { data: orderData, isFetching: isFetchingOrders } = useFetch(
+    "/data/order_data.json"
+  );
+  const { data: pricingData, isFetching: isFetchingPrices } = useFetch(
+    "/data/pricing_data.json"
+  );
+
+  let reviewDataParsed;
+  if (!isFetchingReviews) {
+    reviewDataParsed = JSON.parse(JSON.stringify(reviewData));
   }
+  let orderDataParsed;
+  if (!isFetchingOrders) {
+    orderDataParsed = JSON.parse(JSON.stringify(orderData));
+  }
+  let pricingDataParsed;
+  if (!isFetchingPrices) {
+    pricingDataParsed = JSON.parse(JSON.stringify(pricingData));
+  }
+
   return (
     <BrowserRouter>
-      {!isFetching && (
+      {!isFetchingReviews && !isFetchingOrders && !isFetchingPrices && (
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Home reviewData={reviewDataParsed} />} />
+            <Route
+              index
+              element={
+                <Home
+                  reviewData={reviewDataParsed}
+                  orderData={orderDataParsed}
+                  pricingData={pricingDataParsed}
+                />
+              }
+            />
           </Route>
         </Routes>
       )}

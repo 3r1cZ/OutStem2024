@@ -1,4 +1,4 @@
-import { Pie } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 interface Props {
   chartTitle: string;
@@ -6,20 +6,17 @@ interface Props {
   chartText: string;
 }
 
-const PieChart = ({ chartTitle, chartData, chartText }: Props) => {
+const BarChart = ({ chartTitle, chartData, chartText }: Props) => {
   return (
     <div className="chart-container">
       <h2 style={{ textAlign: "center" }}>{chartTitle}</h2>
-      <Pie
+      <Bar
         data={chartData}
         options={{
           plugins: {
             title: {
               display: true,
               text: chartText,
-            },
-            legend: {
-              position: "right",
             },
           },
         }}
@@ -28,4 +25,4 @@ const PieChart = ({ chartTitle, chartData, chartText }: Props) => {
   );
 };
 
-export default PieChart;
+export default BarChart;
