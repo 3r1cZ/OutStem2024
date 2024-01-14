@@ -45,11 +45,12 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     return count;
   };
 
+  // getting data to display in a chart given labels (tags), the name of the data on hover, dataset, type of data to look for, and colors
   const data = (
     tags: string[],
     dataName: string,
     dataset: any,
-    type: string,
+    category: string,
     colors: string[]
   ) => {
     return {
@@ -57,13 +58,46 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
       datasets: [
         {
           label: dataName,
-          data: tags.map((tag) => getCount(dataset, type, tag)),
+          data: tags.map((tag) => getCount(dataset, category, tag)),
           backgroundColor: colors,
           borderColor: "white",
           borderWidth: 2,
         },
       ],
     };
+  };
+
+  // function to get the earnings for a given year (currently only for 2023)
+  const getEarningsForYear = () => {
+    let earnings = 0;
+    for (let i = 1; i < 13; i++) {
+      if (i < 10) {
+        earnings = earnings += getEarningsForMonth("0" + i);
+      } else {
+        earnings = earnings += getEarningsForMonth(i.toString());
+      }
+    }
+    return earnings;
+  };
+
+  // function to get the earnings for a given month
+  const getEarningsForMonth = (month: string) => {
+    let price = 0;
+    orderData.forEach((order: any) => {
+      if (order["date"].substring(5, 7) === month) {
+        order.items.forEach((item: any) => {
+          price += calcPrice(item);
+        });
+      }
+    });
+    return price;
+  };
+
+  // function to calculate the price of a given item
+  const calcPrice = (item: any) => {
+    let type = item.type;
+    let size = item.size;
+    return pricingData[type][size];
   };
 
   return (
@@ -97,6 +131,9 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
               ])}
               chartText="Orders Placed at Each Location"
             ></BarChart>
+          </div>
+          <div>
+            <h2>Total Money Earned in 2023: ${getEarningsForYear()}</h2>
           </div>
         </div>
       )}
