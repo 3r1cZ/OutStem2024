@@ -4,9 +4,10 @@ interface Props {
   chartTitle: string;
   chartData: any;
   chartText: string;
+  legend: string[];
 }
 
-const BarChart = ({ chartTitle, chartData, chartText }: Props) => {
+const BarChart = ({ chartTitle, chartData, chartText, legend }: Props) => {
   return (
     <div className="chart-container">
       <h2 style={{ textAlign: "center" }}>{chartTitle}</h2>
@@ -17,6 +18,9 @@ const BarChart = ({ chartTitle, chartData, chartText }: Props) => {
             title: {
               display: true,
               text: chartText,
+            },
+            legend: {
+              display: false,
             },
           },
         }}
