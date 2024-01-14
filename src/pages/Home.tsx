@@ -5,6 +5,7 @@ import Chart from "chart.js/auto";
 import { CategoryScale } from "chart.js";
 import BarChart from "../components/BarChart";
 import LineChart from "../components/LineChart";
+import Dropdown from "../components/Dropdown";
 
 interface Props {
   reviewData: any;
@@ -162,6 +163,9 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
             />
           </div>
           <div>
+            <Dropdown
+              dropdownTitles={["Default", "Pizza Type", "Pizza Size"]}
+            />
             <BarChart
               chartTitle="Orders Placed"
               chartData={data(stores, "Orders", orderData, "store", [
