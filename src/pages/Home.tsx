@@ -16,6 +16,7 @@ interface Props {
 const Home = ({ reviewData, orderData, pricingData }: Props) => {
   const [sentimentTags, setSentimentTags] = useState<string[]>();
   const [stores, setStores] = useState<string[]>();
+  const [barChartFilter, setBarChartFilter] = useState("Default");
   Chart.register(CategoryScale);
 
   // getting sentiment labels
@@ -37,36 +38,58 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
   }, []);
 
   // function to get number of occurrences of data given a dataset, category (ex. sentiment), and type (ex. happy)
-  const getCount = (data: any, category: string, type: string) => {
+  // additionally, there is a filter to search a level deeper
+  const getCount = (
+    data: any,
+    category: string,
+    type: string,
+    filterParent = "None",
+    filter = "Default",
+    filterItem = "None"
+  ) => {
     let count = 0;
     data.forEach((element: any) => {
       if (element[category] === type) {
-        count++;
+        if (filter === "Default") {
+          count++;
+        } else {
+          // ex. category = store, type = Kanata, filterParent = items, filter = type, filterItem = Cheese
+          if (element[filterParent][filter] === filterItem) {
+            count++;
+          }
+        }
       }
     });
     return count;
   };
 
   // getting data to display in a chart given labels (tags), the name of the data on hover, dataset, type of data to look for, and colors
+  // https://stackoverflow.com/questions/28180871/grouped-bar-charts-in-chart-js
   const data = (
     tags: string[],
     dataName: string,
     dataset: any,
     category: string,
-    colors: string[]
+    colors: string[],
+    filterParent = "None",
+    filter = "Default"
   ) => {
-    return {
-      labels: tags,
-      datasets: [
-        {
-          label: dataName,
-          data: tags.map((tag) => getCount(dataset, category, tag)),
-          backgroundColor: colors,
-          borderColor: "white",
-          borderWidth: 2,
-        },
-      ],
-    };
+    if (filter === "Default") {
+      return {
+        labels: tags,
+        datasets: [
+          {
+            label: dataName,
+            data: tags.map((tag) => getCount(dataset, category, tag)),
+            backgroundColor: colors,
+            borderColor: "white",
+            borderWidth: 2,
+          },
+        ],
+      };
+    } else {
+      // get count of each individual filter item
+    }
   };
 
   // function to get the earnings for a given year (currently only for 2023)
@@ -116,6 +139,7 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     "11",
     "12",
   ];
+  // function that returns earning data for a year
   const earningData = (dataName: string, colors: string[]) => {
     return {
       labels: [
@@ -165,18 +189,51 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
           <div>
             <Dropdown
               dropdownTitles={["Default", "Pizza Type", "Pizza Size"]}
+              onClick={(filter) => {
+                if (filter === "Default") {
+                  setBarChartFilter("Default");
+                } else if (filter === "Pizza Type") {
+                  setBarChartFilter("Pizza Type");
+                } else if (filter === "Pizza Size") {
+                  setBarChartFilter("Pizza Size");
+                }
+              }}
             />
-            <BarChart
-              chartTitle="Orders Placed"
-              chartData={data(stores, "Orders", orderData, "store", [
-                "rgb(255, 99, 132)",
-                "rgb(54, 162, 235)",
-                "rgb(255, 205, 86)",
-                "rgb(244,242,107)",
-                "rgb(107,244,140)",
-              ])}
-              chartText="Orders Placed at Each Location"
-            ></BarChart>
+            {barChartFilter === "Default" ? (
+              <BarChart
+                chartTitle="Orders Placed"
+                chartData={data(stores, "Orders", orderData, "store", [
+                  "rgb(255, 99, 132)",
+                  "rgb(54, 162, 235)",
+                  "rgb(255, 205, 86)",
+                  "rgb(244,242,107)",
+                  "rgb(107,244,140)",
+                ])}
+                chartText="Orders Placed at Each Location"
+              ></BarChart>
+            ) : barChartFilter === "Pizza Type" ? (
+              <BarChart
+                chartTitle="Orders Placed"
+                chartData={data(
+                  stores,
+                  "Orders",
+                  orderData,
+                  "store",
+                  ["rgb(255, 99, 132)"],
+                  "items",
+                  "type"
+                )}
+                chartText="Orders Placed at Each Location"
+              ></BarChart>
+            ) : (
+              <BarChart
+                chartTitle="Orders Placed"
+                chartData={data(stores, "Orders", orderData, "store", [
+                  "rgb(107,244,140)",
+                ])}
+                chartText="Orders Placed at Each Location"
+              ></BarChart>
+            )}
           </div>
           <div>
             <h2>Total Money Earned in 2023: ${getEarningsForYear()}</h2>

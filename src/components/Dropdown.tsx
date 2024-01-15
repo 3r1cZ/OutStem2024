@@ -2,14 +2,20 @@ import { useState } from "react";
 
 interface Props {
   dropdownTitles: string[];
+  onClick(filter: string): void;
 }
 
-const Dropdown = ({ dropdownTitles }: Props) => {
+const Dropdown = ({ dropdownTitles, onClick }: Props) => {
   const [selectedOption, setSelectedOption] = useState("Default");
 
   // function to set the selected option
-  const handleSelect = (text: any) => {
+  const handleSelect = (text: string) => {
     setSelectedOption(text);
+    handleClickEvent(text);
+  };
+
+  const handleClickEvent = (text: string) => {
+    onClick(text);
   };
 
   return (
