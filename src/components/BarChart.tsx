@@ -19,7 +19,7 @@ const BarChart = ({ chartTitle, chartData, chartText }: Props) => {
               text: chartText,
             },
             legend: {
-              display: false,
+              display: true,
             },
           },
         }}

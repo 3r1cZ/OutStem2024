@@ -54,9 +54,11 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
           count++;
         } else {
           // ex. category = store, type = Kanata, filterParent = items, filter = type, filterItem = Cheese
-          if (element[filterParent][filter] === filterItem) {
-            count++;
-          }
+          element[filterParent].forEach((item: any) => {
+            if (item[filter] === filterItem) {
+              count++;
+            }
+          });
         }
       }
     });
@@ -71,7 +73,6 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     dataset: any,
     category: string,
     colors: string[],
-    filterParent = "None",
     filter = "Default"
   ) => {
     if (filter === "Default") {
@@ -89,6 +90,38 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
       };
     } else {
       // get count of each individual filter item
+      // first, get tags of the filter
+      let filterTags = new Set<string>();
+      let dataToReturn: any;
+      dataToReturn = [];
+      orderData.forEach((order: any) => {
+        let items = order["items"];
+        items.forEach((item: any) => {
+          filterTags.add(item[filter]);
+        });
+      });
+
+      let filterTagArr = Array.from(filterTags);
+
+      // return data for each tag as a separate column in the graph
+      filterTagArr.forEach((filterTag, index) => {
+        dataToReturn.push({
+          label: filterTag,
+          data: tags.map((tag) =>
+            getCount(dataset, category, tag, "items", filter, filterTag)
+          ),
+          backgroundColor: colors[index],
+          borderColor: "white",
+          borderWidth: 2,
+        });
+      });
+      return {
+        labels: tags,
+        datasets: dataToReturn,
+        backgroundColor: colors,
+        borderColor: "white",
+        borderWidth: 2,
+      };
     }
   };
 
@@ -213,25 +246,41 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
               ></BarChart>
             ) : barChartFilter === "Pizza Type" ? (
               <BarChart
-                chartTitle="Orders Placed"
+                chartTitle="Items Ordered by Pizza Type"
                 chartData={data(
                   stores,
                   "Orders",
                   orderData,
                   "store",
-                  ["rgb(255, 99, 132)"],
-                  "items",
+                  [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                    "rgb(255, 205, 86)",
+                    "rgb(244,242,107)",
+                    "rgb(107,244,140)",
+                  ],
                   "type"
                 )}
-                chartText="Orders Placed at Each Location"
+                chartText="Note: numbers are due to multiple items per order"
               ></BarChart>
             ) : (
               <BarChart
-                chartTitle="Orders Placed"
-                chartData={data(stores, "Orders", orderData, "store", [
-                  "rgb(107,244,140)",
-                ])}
-                chartText="Orders Placed at Each Location"
+                chartTitle="Items Ordered by Pizza Size"
+                chartData={data(
+                  stores,
+                  "Orders",
+                  orderData,
+                  "store",
+                  [
+                    "rgb(255, 99, 132)",
+                    "rgb(54, 162, 235)",
+                    "rgb(255, 205, 86)",
+                    "rgb(244,242,107)",
+                    "rgb(107,244,140)",
+                  ],
+                  "size"
+                )}
+                chartText="Note: numbers are due to multiple items per order"
               ></BarChart>
             )}
           </div>
