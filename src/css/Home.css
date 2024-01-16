@@ -13,13 +13,13 @@
 .display-data {
   display: grid;
   grid-template-columns: auto auto;
-  grid-gap: 20px;
 }
 
 .graph-container {
   background-color: white;
   border-radius: 10px;
   display: flex;
+  margin: 5px;
 
   justify-content: center;
   align-items: center;
