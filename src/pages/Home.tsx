@@ -67,8 +67,11 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     return count;
   };
 
-  // getting data to display in a chart given labels (tags), the name of the data on hover, dataset, type of data to look for, and colors
-  // https://stackoverflow.com/questions/28180871/grouped-bar-charts-in-chart-js
+  // getting data to display in a chart given:
+  // tags: labels of the graph
+  // dataName: the label of each individual section of data
+  // dataset: the dataset to query
+  // colors: colors of each bar
   const data = (
     tags: string[],
     dataName: string,
@@ -92,10 +95,9 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
       };
     } else {
       // get count of each individual filter item
-      // first, get tags of the filter
+      // first, get tags/labels of the filter
       let filterTags = new Set<string>();
-      let dataToReturn: any;
-      dataToReturn = [];
+      let dataToReturn: any = [];
       orderData.forEach((order: any) => {
         let items = order["items"];
         items.forEach((item: any) => {
