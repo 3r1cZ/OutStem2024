@@ -95,15 +95,22 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
       };
     } else {
       // get count of each individual filter item
-      // first, get tags/labels of the filter
+      // first, get tags/labels of the filter by looping through pricing data
       let filterTags = new Set<string>();
       let dataToReturn: any = [];
-      orderData.forEach((order: any) => {
-        let items = order["items"];
-        items.forEach((item: any) => {
-          filterTags.add(item[filter]);
-        });
-      });
+      if (filter === "type") {
+        for (let item in pricingData) {
+          filterTags.add(item);
+        }
+      } else if (filter === "size") {
+        // loop through first item
+        for (let item in pricingData) {
+          for (let size in pricingData[item]) {
+            filterTags.add(size);
+          }
+          break;
+        }
+      }
 
       let filterTagArr = Array.from(filterTags);
 
