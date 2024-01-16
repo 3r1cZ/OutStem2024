@@ -1,2 +1,43 @@
+.page {
+  background-color: #f0f5f5;
+}
+
+.heading {
+  display: flex;
+}
+
+.title-text {
+  color: gray;
+}
+
+.display-data {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-gap: 20px;
+}
+
 .graph-container {
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+}
+
+.earnings-graph {
+  width: 500px;
+}
+
+.review-graph {
+  width: 500px;
+}
+
+.order-graph {
+  width: 800px;
+}
+
+.earnings-text {
+  font-size: 150px;
+  font-weight: bold;
 }

@@ -6,6 +6,8 @@ import { CategoryScale } from "chart.js";
 import BarChart from "../components/BarChart";
 import LineChart from "../components/LineChart";
 import Dropdown from "../components/Dropdown";
+import "../css/Home.css";
+import AnimationCounter from "../components/AnimationCounter";
 
 interface Props {
   reviewData: any;
@@ -203,96 +205,115 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
   return (
     <AnimationFadeIn>
       {sentimentTags !== undefined && stores !== undefined && (
-        <div>
-          <h1>
-            <u>A Slice of Pi</u>
-          </h1>
-          <div>
-            <PieChart
-              chartTitle="Customer Reviews"
-              chartData={data(sentimentTags, "Users", reviewData, "sentiment", [
-                "rgb(255, 99, 132)",
-                "rgb(54, 162, 235)",
-                "rgb(255, 205, 86)",
-                "rgb(244,242,107)",
-              ])}
-              chartText="Sentiments of Customer Reviews"
-            />
+        <div className="page">
+          <div className="heading">
+            <h1 className="title-text">A Slice of Pi</h1>
           </div>
-          <div>
-            <Dropdown
-              dropdownTitles={["Default", "Pizza Type", "Pizza Size"]}
-              onClick={(filter) => {
-                if (filter === "Default") {
-                  setBarChartFilter("Default");
-                } else if (filter === "Pizza Type") {
-                  setBarChartFilter("Pizza Type");
-                } else if (filter === "Pizza Size") {
-                  setBarChartFilter("Pizza Size");
-                }
-              }}
-            />
-            {barChartFilter === "Default" ? (
-              <BarChart
-                chartTitle="Orders Placed"
-                chartData={data(stores, "Orders", orderData, "store", [
-                  "rgb(255, 99, 132)",
-                  "rgb(54, 162, 235)",
-                  "rgb(255, 205, 86)",
-                  "rgb(244,242,107)",
-                  "rgb(107,244,140)",
-                ])}
-                chartText="Orders Placed at Each Location"
-              ></BarChart>
-            ) : barChartFilter === "Pizza Type" ? (
-              <BarChart
-                chartTitle="Items Ordered by Pizza Type"
-                chartData={data(
-                  stores,
-                  "Orders",
-                  orderData,
-                  "store",
-                  [
+          <div className="display-data">
+            <div className="graph-container">
+              <h3>Total Money Earned in 2023:</h3>
+              <p className="earnings-text">$</p>
+              <AnimationCounter
+                from={0}
+                to={getEarningsForYear()}
+                className="earnings-text"
+              ></AnimationCounter>
+            </div>
+            <div className="graph-container">
+              <LineChart
+                chartTitle="Monthly Earnings"
+                chartData={earningData("Earnings", ["white"])}
+                chartText="Earnings per Month ($)"
+                className="earnings-graph"
+              ></LineChart>
+            </div>
+            <div className="graph-container">
+              <Dropdown
+                dropdownTitles={["Default", "Pizza Type", "Pizza Size"]}
+                onClick={(filter) => {
+                  if (filter === "Default") {
+                    setBarChartFilter("Default");
+                  } else if (filter === "Pizza Type") {
+                    setBarChartFilter("Pizza Type");
+                  } else if (filter === "Pizza Size") {
+                    setBarChartFilter("Pizza Size");
+                  }
+                }}
+              />
+              {barChartFilter === "Default" ? (
+                <BarChart
+                  chartTitle="Orders Placed"
+                  chartData={data(stores, "Orders", orderData, "store", [
                     "rgb(255, 99, 132)",
                     "rgb(54, 162, 235)",
                     "rgb(255, 205, 86)",
                     "rgb(244,242,107)",
                     "rgb(107,244,140)",
-                  ],
-                  "type"
-                )}
-                chartText="Note: numbers are due to multiple items per order"
-              ></BarChart>
-            ) : (
-              <BarChart
-                chartTitle="Items Ordered by Pizza Size"
+                  ])}
+                  chartText="Orders Placed at Each Location"
+                  className="order-graph"
+                ></BarChart>
+              ) : barChartFilter === "Pizza Type" ? (
+                <BarChart
+                  chartTitle="Items Ordered by Pizza Type"
+                  chartData={data(
+                    stores,
+                    "Orders",
+                    orderData,
+                    "store",
+                    [
+                      "rgb(255, 99, 132)",
+                      "rgb(54, 162, 235)",
+                      "rgb(255, 205, 86)",
+                      "rgb(244,242,107)",
+                      "rgb(107,244,140)",
+                    ],
+                    "type"
+                  )}
+                  chartText="Note: numbers are due to multiple items per order"
+                  className="order-graph"
+                ></BarChart>
+              ) : (
+                <BarChart
+                  chartTitle="Items Ordered by Pizza Size"
+                  chartData={data(
+                    stores,
+                    "Orders",
+                    orderData,
+                    "store",
+                    [
+                      "rgb(255, 99, 132)",
+                      "rgb(54, 162, 235)",
+                      "rgb(255, 205, 86)",
+                      "rgb(244,242,107)",
+                      "rgb(107,244,140)",
+                    ],
+                    "size"
+                  )}
+                  chartText="Note: numbers are due to multiple items per order"
+                  className="order-graph"
+                ></BarChart>
+              )}
+            </div>
+            <div className="graph-container">
+              <PieChart
+                chartTitle="Customer Reviews"
                 chartData={data(
-                  stores,
-                  "Orders",
-                  orderData,
-                  "store",
+                  sentimentTags,
+                  "Users",
+                  reviewData,
+                  "sentiment",
                   [
                     "rgb(255, 99, 132)",
                     "rgb(54, 162, 235)",
                     "rgb(255, 205, 86)",
                     "rgb(244,242,107)",
-                    "rgb(107,244,140)",
-                  ],
-                  "size"
+                  ]
                 )}
-                chartText="Note: numbers are due to multiple items per order"
-              ></BarChart>
-            )}
-          </div>
-          <div>
-            <h2>Total Money Earned in 2023: ${getEarningsForYear()}</h2>
-          </div>
-          <div>
-            <LineChart
-              chartTitle="Monthly Earnings"
-              chartData={earningData("Earnings", ["white"])}
-              chartText="Earnings per Month ($)"
-            ></LineChart>
+                chartText="Sentiments of Customer Reviews"
+                className="review-graph"
+              />
+            </div>
           </div>
         </div>
       )}
