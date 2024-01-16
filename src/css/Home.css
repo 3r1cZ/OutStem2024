@@ -4,22 +4,29 @@
 
 .heading {
   display: flex;
-}
 
-.title-text {
-  color: gray;
+  .title-text {
+    color: gray;
+    margin-right: 30px;
+  }
+
+  .date-filter-text {
+    width: 120px;
+    height: 30px;
+    align-self: center;
+  }
+
+  .date-filter-button {
+    width: 30px;
+    height: 30px;
+    margin-right: 5px;
+    align-self: center;
+  }
 }
 
 .display-data {
   display: grid;
   grid-template-columns: auto auto;
-}
-
-.counter-container {
-  background-color: white;
-  border-radius: 10px;
-  margin: 5px;
-  text-align: center;
 }
 
 .graph-container {
@@ -30,26 +37,33 @@
 
   justify-content: center;
   align-items: center;
+
+  .earnings-graph {
+    width: 800px;
+  }
+
+  .review-graph {
+    width: 500px;
+  }
+
+  .order-graph {
+    width: 800px;
+  }
 }
 
-.earnings-graph {
-  width: 800px;
-}
+.counter-container {
+  background-color: white;
+  border-radius: 10px;
+  margin: 5px;
+  text-align: center;
 
-.review-graph {
-  width: 500px;
-}
+  .dollar-text {
+    display: flex;
+    justify-content: center;
+  }
 
-.order-graph {
-  width: 800px;
-}
-
-.dollar-text {
-  display: flex;
-  justify-content: center;
-}
-
-.dollar-sign {
-  font-size: 150px;
-  font-weight: bold;
+  .dollar-sign {
+    font-size: 150px;
+    font-weight: bold;
+  }
 }
