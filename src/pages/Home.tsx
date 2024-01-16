@@ -220,21 +220,25 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
           </div>
           <div className="display-data">
             <div className="graph-container">
-              <h3>Total Money Earned in 2023:</h3>
-              <p className="earnings-text">$</p>
-              <AnimationCounter
-                from={0}
-                to={getEarningsForYear()}
-                className="earnings-text"
-              ></AnimationCounter>
-            </div>
-            <div className="graph-container">
               <LineChart
                 chartTitle="Monthly Earnings"
                 chartData={earningData("Earnings", ["white"])}
                 chartText="Earnings per Month ($)"
                 className="earnings-graph"
               ></LineChart>
+            </div>
+            <div className="counter-container">
+              <div>
+                <h3>Total Money Earned in 2023:</h3>
+              </div>
+              <div className="dollar-text">
+                <p className="dollar-sign">$</p>
+                <AnimationCounter
+                  from={0}
+                  to={getEarningsForYear()}
+                  className="dollar-sign"
+                ></AnimationCounter>
+              </div>
             </div>
             <div className="graph-container">
               <Dropdown
