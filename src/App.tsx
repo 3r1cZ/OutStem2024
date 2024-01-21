@@ -33,7 +33,7 @@ function App() {
     <BrowserRouter>
       {!isFetchingReviews && !isFetchingOrders && !isFetchingPrices && (
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/OutStem2024/" element={<Layout />}>
             <Route
               index
               element={
