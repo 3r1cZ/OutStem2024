@@ -67,6 +67,7 @@
   .dollar-text {
     display: flex;
     justify-content: center;
+    margin-top: 30px;
   }
 
   .dollar-sign {

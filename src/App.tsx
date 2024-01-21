@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import useFetch from "./hooks/useFetch";
 
 function App() {
+  // fetch data
   const { data: reviewData, isFetching: isFetchingReviews } = useFetch(
     "/data/review_data.json"
   );
