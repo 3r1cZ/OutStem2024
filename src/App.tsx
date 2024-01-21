@@ -7,13 +7,13 @@ import useFetch from "./hooks/useFetch";
 function App() {
   // fetch data
   const { data: reviewData, isFetching: isFetchingReviews } = useFetch(
-    "/data/review_data.json"
+    "/OutStem2024/data/review_data.json"
   );
   const { data: orderData, isFetching: isFetchingOrders } = useFetch(
-    "/data/order_data.json"
+    "/OutStem2024/data/order_data.json"
   );
   const { data: pricingData, isFetching: isFetchingPrices } = useFetch(
-    "/data/pricing_data.json"
+    "/OutStem2024/data/pricing_data.json"
   );
 
   let reviewDataParsed;
