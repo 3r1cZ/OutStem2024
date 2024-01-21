@@ -8,9 +8,6 @@ import LineChart from "../components/LineChart";
 import Dropdown from "../components/Dropdown";
 import "../css/Home.css";
 import AnimationCounter from "../components/AnimationCounter";
-import FullCalendar from "@fullcalendar/react";
-import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from "@fullcalendar/interaction";
 
 interface Props {
   reviewData: any;
@@ -22,8 +19,6 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
   const [sentimentTags, setSentimentTags] = useState<string[]>();
   const [stores, setStores] = useState<string[]>();
   const [barChartFilter, setBarChartFilter] = useState("Default");
-  const [displayCalendar, setDisplay] = useState(false);
-  const [filterStartDate, setStartDate] = useState("Choose a Date");
   Chart.register(CategoryScale);
 
   // getting sentiment labels
@@ -217,41 +212,20 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     };
   };
 
-  const handleDateClick = (arg: any) => {
-    setStartDate(arg.dateStr);
-  };
-
   return (
     <AnimationFadeIn>
       {sentimentTags !== undefined && stores !== undefined && (
         <div className="page">
           <div className="heading">
             <h1 className="title-text">A Slice of Pi</h1>
-            <input
-              type="text"
-              value={filterStartDate}
-              className="date-filter-text"
-              id="start-date"
-              readOnly
-            />
-            <button
-              className="date-filter-button"
-              onClick={() => setDisplay(displayCalendar ? false : true)}
-            ></button>
-            <input
-              type="text"
-              className="date-filter-text"
-              id="end-date"
-              readOnly
-            />
-            <button className="date-filter-button"></button>
-            {displayCalendar && (
-              <FullCalendar
-                plugins={[dayGridPlugin, interactionPlugin]}
-                initialView="dayGridMonth"
-                dateClick={handleDateClick}
-              />
-            )}
+            <label htmlFor="start-date" className="label-text">
+              Start Date:
+            </label>
+            <input type="date" className="date-filter-text" id="start-date" />
+            <label htmlFor="end-date" className="label-text">
+              End Date:
+            </label>
+            <input type="date" className="date-filter-text" id="end-date" />
           </div>
           <div className="display-data">
             <div className="graph-container">

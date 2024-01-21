@@ -10,10 +10,17 @@
     margin-right: 30px;
   }
 
+  .label-text {
+    align-self: center;
+    font-weight: bold;
+  }
+
   .date-filter-text {
     width: 120px;
     height: 30px;
     align-self: center;
+    margin-left: 10px;
+    margin-right: 10px;
   }
 
   .date-filter-button {
