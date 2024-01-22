@@ -263,6 +263,7 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
               type="date"
               className="date-filter-text"
               id="start-date"
+              value={startDateFilter}
               onChange={(e) => {
                 setStartDate(e.target.value);
               }}
@@ -274,6 +275,7 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
               type="date"
               className="date-filter-text"
               id="end-date"
+              value={endDateFilter}
               onChange={(e) => setEndDate(e.target.value)}
             />
           </div>
