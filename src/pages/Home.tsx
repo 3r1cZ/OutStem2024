@@ -19,6 +19,8 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
   const [sentimentTags, setSentimentTags] = useState<string[]>();
   const [stores, setStores] = useState<string[]>();
   const [barChartFilter, setBarChartFilter] = useState("Default");
+  const [startDateFilter, setStartDate] = useState("2023-01-01");
+  const [endDateFilter, setEndDate] = useState("2023-12-31");
   Chart.register(CategoryScale);
 
   // getting sentiment labels
@@ -45,13 +47,19 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     data: any,
     category: string,
     type: string,
+    startDate: string,
+    endDate: string,
     filterParent = "None",
     filter = "Default",
     filterItem = "None"
   ) => {
     let count = 0;
     data.forEach((element: any) => {
-      if (element[category] === type) {
+      if (
+        element[category] === type &&
+        element["date"] >= startDate &&
+        element["date"] <= endDate
+      ) {
         if (filter === "Default") {
           count++;
         } else {
@@ -73,13 +81,17 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
   // dataset: the dataset to query
   // colors: colors of each bar
   // filter: the filter for the data (optional)
+  // startDate: the start date for the data (optional)
+  // endDate: the end date for the data (optional)
   const data = (
     tags: string[],
     dataName: string,
     dataset: any,
     category: string,
     colors: string[],
-    filter = "Default"
+    filter = "Default",
+    startDate = "2023-01-01",
+    endDate = "2023-12-31"
   ) => {
     if (filter === "Default") {
       return {
@@ -87,7 +99,9 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
         datasets: [
           {
             label: dataName,
-            data: tags.map((tag) => getCount(dataset, category, tag)),
+            data: tags.map((tag) =>
+              getCount(dataset, category, tag, startDate, endDate)
+            ),
             backgroundColor: colors,
             borderColor: "white",
             borderWidth: 2,
@@ -120,7 +134,16 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
         dataToReturn.push({
           label: filterTag,
           data: tags.map((tag) =>
-            getCount(dataset, category, tag, "items", filter, filterTag)
+            getCount(
+              dataset,
+              category,
+              tag,
+              startDate,
+              endDate,
+              "items",
+              filter,
+              filterTag
+            )
           ),
           backgroundColor: colors[index],
           borderColor: "white",
@@ -151,10 +174,18 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
   };
 
   // function to get the earnings for a given month
-  const getEarningsForMonth = (month: string) => {
+  const getEarningsForMonth = (
+    month: string,
+    startDate = "2023-01-01",
+    endDate = "2023-12-31"
+  ) => {
     let price = 0;
     orderData.forEach((order: any) => {
-      if (order["date"].substring(5, 7) === month) {
+      if (
+        order["date"].substring(5, 7) === month &&
+        order["date"] >= startDate &&
+        order["date"] <= endDate
+      ) {
         order.items.forEach((item: any) => {
           price += calcPrice(item);
         });
@@ -185,7 +216,12 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
     "12",
   ];
   // function that returns earning data for a year
-  const earningData = (dataName: string, colors: string[]) => {
+  const earningData = (
+    dataName: string,
+    colors: string[],
+    startDate = "2023-01-01",
+    endDate = "2023-12-31"
+  ) => {
     return {
       labels: [
         "January",
@@ -204,7 +240,9 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
       datasets: [
         {
           label: dataName,
-          data: monthsInNum.map((month) => getEarningsForMonth(month)),
+          data: monthsInNum.map((month) =>
+            getEarningsForMonth(month, startDate, endDate)
+          ),
           backgroundColor: colors,
           borderColor: "rgb(75, 192, 192)",
         },
@@ -221,17 +259,34 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
             <label htmlFor="start-date" className="label-text">
               Start Date:
             </label>
-            <input type="date" className="date-filter-text" id="start-date" />
+            <input
+              type="date"
+              className="date-filter-text"
+              id="start-date"
+              onChange={(e) => {
+                setStartDate(e.target.value);
+              }}
+            />
             <label htmlFor="end-date" className="label-text">
               End Date:
             </label>
-            <input type="date" className="date-filter-text" id="end-date" />
+            <input
+              type="date"
+              className="date-filter-text"
+              id="end-date"
+              onChange={(e) => setEndDate(e.target.value)}
+            />
           </div>
           <div className="display-data">
             <div className="graph-container">
               <LineChart
                 chartTitle="Monthly Earnings"
-                chartData={earningData("Earnings", ["white"])}
+                chartData={earningData(
+                  "Earnings",
+                  ["white"],
+                  startDateFilter,
+                  endDateFilter
+                )}
                 chartText="Earnings per Month ($)"
                 className="earnings-graph"
               ></LineChart>
@@ -265,13 +320,22 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
               {barChartFilter === "Default" ? (
                 <BarChart
                   chartTitle="Orders Placed"
-                  chartData={data(stores, "Orders", orderData, "store", [
-                    "rgb(255, 99, 132)",
-                    "rgb(54, 162, 235)",
-                    "rgb(255, 205, 86)",
-                    "rgb(244,242,107)",
-                    "rgb(107,244,140)",
-                  ])}
+                  chartData={data(
+                    stores,
+                    "Orders",
+                    orderData,
+                    "store",
+                    [
+                      "rgb(255, 99, 132)",
+                      "rgb(54, 162, 235)",
+                      "rgb(255, 205, 86)",
+                      "rgb(244,242,107)",
+                      "rgb(107,244,140)",
+                    ],
+                    "Default",
+                    startDateFilter,
+                    endDateFilter
+                  )}
                   chartText="Orders Placed at Each Location"
                   className="order-graph"
                 ></BarChart>
@@ -290,7 +354,9 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
                       "rgb(244,242,107)",
                       "rgb(107,244,140)",
                     ],
-                    "type"
+                    "type",
+                    startDateFilter,
+                    endDateFilter
                   )}
                   chartText="Note: numbers are due to multiple items per order"
                   className="order-graph"
@@ -310,7 +376,9 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
                       "rgb(244,242,107)",
                       "rgb(107,244,140)",
                     ],
-                    "size"
+                    "size",
+                    startDateFilter,
+                    endDateFilter
                   )}
                   chartText="Note: numbers are due to multiple items per order"
                   className="order-graph"
@@ -330,7 +398,10 @@ const Home = ({ reviewData, orderData, pricingData }: Props) => {
                     "rgb(54, 162, 235)",
                     "rgb(255, 205, 86)",
                     "rgb(244,242,107)",
-                  ]
+                  ],
+                  "Default",
+                  startDateFilter,
+                  endDateFilter
                 )}
                 chartText="Sentiments of Customer Reviews"
                 className="review-graph"
